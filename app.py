@@ -102,7 +102,13 @@ RTL_CSS = """
         margin: 2px;
     }
     /* Hide Streamlit footer badge and branding */
-    footer {visibility: hidden;}
+    footer {
+        visibility: hidden;
+        height: 0px;
+    }
+    footer:after {
+        content: none;
+    }
     [data-testid="manage-app-button"],
     .viewerBadge_container__r5tak,
     .styles_viewerBadge__CvC9N,
