@@ -21,7 +21,7 @@ st.set_page_config(
     page_title="מגן על הזכויות - מילואים",
     page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 # ============================================================
@@ -50,8 +50,11 @@ RTL_CSS = """
     [data-testid="stSidebar"] {
         direction: rtl;
         text-align: right;
-        min-width: 380px;
-        width: 380px;
+    }
+    [data-testid="stSidebar"] > div {
+        overflow-x: hidden;
+        padding-right: 1rem;
+        padding-left: 1rem;
     }
     /* Headers */
     h1, h2, h3, h4, h5, h6 {
