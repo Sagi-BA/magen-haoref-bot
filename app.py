@@ -101,8 +101,18 @@ RTL_CSS = """
         font-size: 0.85em;
         margin: 2px;
     }
-    /* Hide Streamlit footer badge */
+    /* Hide Streamlit footer badge and branding */
     footer {visibility: hidden;}
+    [data-testid="manage-app-button"],
+    .viewerBadge_container__r5tak,
+    .styles_viewerBadge__CvC9N,
+    ._profileContainer_gzau3_53,
+    [data-testid="stStatusWidget"],
+    #MainMenu,
+    header[data-testid="stHeader"] .stActionButton,
+    iframe[title="Streamlit Cloud"] {
+        display: none !important;
+    }
     /* Disclaimer bar */
     .disclaimer {
         background-color: #FFF3E0;
