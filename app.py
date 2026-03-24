@@ -44,7 +44,7 @@ RTL_CSS = """
     /* Move chat input up from bottom */
     [data-testid="stChatInput"],
     .stChatInputContainer {
-        bottom: 15px;
+        bottom: 20px;
     }
     /* Chat messages */
     [data-testid="stChatMessageContent"] {
@@ -88,7 +88,10 @@ RTL_CSS = """
     }
     /* Push page content below the sticky header */
     .stApp {
-        margin-top: 40px;
+        margin-top: 30px;
+    }
+    .stMainBlockContainer {
+        padding-top: 0.5rem;
     }
     /* Emergency banner */
     .emergency-banner {
@@ -137,7 +140,7 @@ RTL_CSS = """
 </style>
 """
 st.markdown(RTL_CSS, unsafe_allow_html=True)
-st.markdown('<div class="sticky-header">נוצר ע"י <a href="http://sagiai.co.il/" target="_blank" style="color: #82b1ff; text-decoration: none;">שגיא בר און</a></div>', unsafe_allow_html=True)
+st.markdown('<div class="sticky-header">פותח ע"י <a href="http://sagiai.co.il/" target="_blank" style="color: #82b1ff; text-decoration: none;">שגיא בר און</a></div>', unsafe_allow_html=True)
 
 # ============================================================
 # Constants
