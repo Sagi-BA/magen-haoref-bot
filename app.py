@@ -51,6 +51,16 @@ RTL_CSS = """
         direction: rtl;
         text-align: right;
     }
+    [data-testid="stChatMessageContent"] ol,
+    [data-testid="stChatMessageContent"] ul {
+        direction: rtl;
+        padding-right: 1.5em;
+        padding-left: 0;
+    }
+    [data-testid="stChatMessageContent"] li {
+        direction: rtl;
+        text-align: right;
+    }
     /* Sidebar */
     [data-testid="stSidebar"] {
         direction: rtl;
