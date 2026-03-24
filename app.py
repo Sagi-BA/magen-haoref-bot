@@ -29,13 +29,15 @@ st.set_page_config(
 # ============================================================
 RTL_CSS = """
 <style>
-    /* Global RTL */
-    .stApp, .stChatMessage, .stMarkdown, .stTextInput > div > div > input {
+    /* Global RTL — avoid .stApp to not break Streamlit layout */
+    .stMainBlockContainer, .stChatMessage, .stMarkdown, .stTextInput > div > div > input {
         direction: rtl;
         text-align: right;
     }
     /* Chat input */
-    .stChatInputContainer textarea {
+    .stChatInputContainer textarea,
+    [data-testid="stChatInput"] textarea,
+    .stChatInput textarea {
         direction: rtl;
         text-align: right;
     }
@@ -48,6 +50,8 @@ RTL_CSS = """
     [data-testid="stSidebar"] {
         direction: rtl;
         text-align: right;
+        min-width: 380px;
+        width: 380px;
     }
     /* Headers */
     h1, h2, h3, h4, h5, h6 {
@@ -301,7 +305,7 @@ def render_sidebar():
     """Render the sidebar with contacts and disclaimer."""
     with st.sidebar:
         st.image(
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Israel_Defense_Forces_logo.svg/200px-Israel_Defense_Forces_logo.svg.png",
+            "logo.png",
             width=80,
         )
         st.markdown("## 🛡️ מגן על הזכויות")
