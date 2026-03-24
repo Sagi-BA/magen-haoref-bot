@@ -41,6 +41,11 @@ RTL_CSS = """
         direction: rtl;
         text-align: right;
     }
+    /* Move chat input up from bottom */
+    [data-testid="stChatInput"],
+    .stChatInputContainer {
+        bottom: 15px;
+    }
     /* Chat messages */
     [data-testid="stChatMessageContent"] {
         direction: rtl;
