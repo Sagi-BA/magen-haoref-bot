@@ -119,6 +119,12 @@ RTL_CSS = """
         font-size: 0.85em;
         margin: 2px;
     }
+    /* Single column topic buttons on mobile */
+    @media (max-width: 767px) {
+        div[data-testid="stExpander"] [data-testid="stHorizontalBlock"] {
+            flex-direction: column;
+        }
+    }
     /* Hide Streamlit footer badge and branding */
     footer {
         visibility: hidden;
@@ -299,16 +305,13 @@ def retrieve_context(vector_store, query: str) -> str:
     return "\n\n".join(context_parts)
 
 
-def generate_response(
-    llm: ChatOpenAI,
+def _build_messages(
     system_prompt: str,
     retrieved_context: str,
     chat_history: list,
     user_question: str,
-) -> str:
-    """Build the full prompt and generate a response."""
-
-    # System message with RAG context injected
+) -> list:
+    """Build the message list for the LLM."""
     full_system = (
         f"{system_prompt}\n\n"
         f"---\n\n"
@@ -321,18 +324,22 @@ def generate_response(
 
     messages = [SystemMessage(content=full_system)]
 
-    # Add chat history (keep last 10 turns for context window management)
     for msg in chat_history[-20:]:
         if msg["role"] == "user":
             messages.append(HumanMessage(content=msg["content"]))
         else:
             messages.append(AIMessage(content=msg["content"]))
 
-    # Current question
     messages.append(HumanMessage(content=user_question))
+    return messages
 
-    response = llm.invoke(messages)
-    return response.content
+
+def stream_response(llm, system_prompt, retrieved_context, chat_history, user_question):
+    """Stream the LLM response token by token."""
+    messages = _build_messages(system_prompt, retrieved_context, chat_history, user_question)
+    for chunk in llm.stream(messages):
+        if chunk.content:
+            yield chunk.content
 
 
 # ============================================================
@@ -444,9 +451,19 @@ def main():
                     st.session_state.topic_click = topic
                     st.rerun()
 
-    # Initialize chat history
+    # Initialize chat history with welcome message
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        st.session_state.messages = [
+            {
+                "role": "assistant",
+                "content": (
+                    "שלום! אני **מגן על הזכויות** 🛡️\n\n"
+                    "אני כאן לעזור לך למצות את כל הזכויות, המענקים וההטבות "
+                    "שמגיעים לך כחייל/ת מילואים או כבן/בת זוג.\n\n"
+                    "אפשר לשאול אותי כל שאלה, או ללחוץ על אחד הנושאים למעלה כדי להתחיל."
+                ),
+            }
+        ]
 
     # Handle topic button click
     if "topic_click" in st.session_state:
@@ -457,16 +474,10 @@ def main():
         st.session_state.messages.append({"role": "user", "content": user_input})
 
         with st.chat_message("assistant", avatar="🛡️"):
-            with st.spinner("מחפש במאגר הזכויות..."):
-                context = retrieve_context(vector_store, user_input)
-                response = generate_response(
-                    llm=llm,
-                    system_prompt=system_prompt,
-                    retrieved_context=context,
-                    chat_history=st.session_state.messages[:-1],
-                    user_question=user_input,
-                )
-            st.markdown(response)
+            context = retrieve_context(vector_store, user_input)
+            response = st.write_stream(
+                stream_response(llm, system_prompt, context, st.session_state.messages[:-1], user_input)
+            )
         st.session_state.messages.append({"role": "assistant", "content": response})
 
     # Display chat history
@@ -483,20 +494,10 @@ def main():
 
         # Generate response
         with st.chat_message("assistant", avatar="🛡️"):
-            with st.spinner("מחפש במאגר הזכויות..."):
-                # Retrieve relevant context
-                context = retrieve_context(vector_store, user_input)
-
-                # Generate LLM response
-                response = generate_response(
-                    llm=llm,
-                    system_prompt=system_prompt,
-                    retrieved_context=context,
-                    chat_history=st.session_state.messages[:-1],  # exclude current
-                    user_question=user_input,
-                )
-
-            st.markdown(response)
+            context = retrieve_context(vector_store, user_input)
+            response = st.write_stream(
+                stream_response(llm, system_prompt, context, st.session_state.messages[:-1], user_input)
+            )
 
         st.session_state.messages.append({"role": "assistant", "content": response})
 
