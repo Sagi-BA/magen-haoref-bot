@@ -71,6 +71,17 @@ RTL_CSS = """
         padding-right: 1rem;
         padding-left: 1rem;
     }
+    [data-testid="stSidebar"] ul,
+    [data-testid="stSidebar"] li,
+    [data-testid="stSidebar"] p {
+        direction: rtl;
+        text-align: right;
+        unicode-bidi: plaintext;
+    }
+    [data-testid="stSidebar"] ul {
+        padding-right: 1.5em;
+        padding-left: 0;
+    }
     /* Headers */
     h1, h2, h3, h4, h5, h6 {
         direction: rtl;
