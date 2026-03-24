@@ -94,6 +94,8 @@ RTL_CSS = """
         font-size: 0.85em;
         margin: 2px;
     }
+    /* Hide Streamlit footer badge */
+    footer {visibility: hidden;}
     /* Disclaimer bar */
     .disclaimer {
         background-color: #FFF3E0;
